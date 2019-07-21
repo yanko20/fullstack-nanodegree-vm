@@ -1,0 +1,21 @@
+<html>
+
+<head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div id="header">
+    <h1 id="header_text">Catalog App</h1>
+    <button id="login_button">Login</button>
+</div>
+<div id="content">
+    <div id="details">
+        <h1>{{ bike_type_name }}</h1>
+        <p>{{ bike_part_description }}</p>
+    </div>
+</div>
+</body>
+
+</html>
