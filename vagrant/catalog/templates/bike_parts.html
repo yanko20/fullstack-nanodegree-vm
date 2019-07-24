@@ -15,7 +15,7 @@
         <h1>Categories</h1>
         {% for bike_type in bike_types %}
             <p class="list">
-                <a href="{{ url_for('show_bike_items', bike_type_name = bike_type.name) }}">{{ bike_type.name }}</a>
+                <a href="{{ url_for('show_bike_parts', bike_type_name = bike_type.name) }}">{{ bike_type.name }}</a>
             </p>
         {% endfor %}
     </div>

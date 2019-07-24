@@ -19,14 +19,14 @@ def show_bikes():
 
 
 # Show a restaurant menu
-@app.route('/catalog/<string:bike_type_name>/items')
-def show_bike_items(bike_type_name):
+@app.route('/catalog/<string:bike_type_name>/parts')
+def show_bike_parts(bike_type_name):
     bike_types = session.query(BikeType).all()
     bike_type = session.query(BikeType).filter_by(name=bike_type_name).one()
     bike_parts = session.query(BikePart).filter_by(
         bike_type_id=bike_type.id).all()
     bike_part_count = len(bike_parts)
-    return render_template('bike_items.html',
+    return render_template('bike_parts.html',
                            bike_types=bike_types,
                            bike_parts=bike_parts,
                            bike_type=bike_type,
