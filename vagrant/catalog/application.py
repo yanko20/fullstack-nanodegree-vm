@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, BikeType, BikePart
+from database_setup import Base, BikeType, BikePart, User
 
 app = Flask(__name__)
 engine = create_engine('sqlite:///bikeparts.db?check_same_thread=False')
@@ -41,6 +41,28 @@ def show_bike_part_description(bike_type_name, bike_part_name):
     return render_template('bike_part_description.html',
                            bike_type_name=bike_type_name,
                            bike_part_description=bike_part_description)
+
+
+def create_user(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+        'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def get_user_info(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def get_user_id(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
 
 
 if __name__ == '__main__':
