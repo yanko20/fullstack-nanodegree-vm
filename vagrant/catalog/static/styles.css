@@ -62,8 +62,14 @@ body {
     font-style: italic;
 }
 
-a {
+
+#content a {
     color: #F22A01;
+    text-decoration: none;
+}
+
+button a {
+    color: white;
     text-decoration: none;
 }
 
