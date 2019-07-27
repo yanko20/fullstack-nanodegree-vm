@@ -5,7 +5,9 @@
 </head>
 <body>
 <div class="header">
-    <h1 class="header_text">Catalog App</h1>
+    <h1 class="header_text">
+        <a href="{{ url_for('show_bikes') }}">Catalog App</a>
+    </h1>
     {% if 'username' not in session %}
         <a class="button" href="{{ url_for('showLogin') }}">Login </a>
     {% else %}

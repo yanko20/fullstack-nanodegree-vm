@@ -69,3 +69,8 @@ a.button {
 .list {
     line-height: 0.6;
 }
+
+.header_text a {
+    color: white;
+    text-decoration: none;
+}
