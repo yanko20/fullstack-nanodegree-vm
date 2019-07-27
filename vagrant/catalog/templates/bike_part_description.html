@@ -1,21 +1,13 @@
-<html>
-
-<head>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-
-<body>
-
-<div id="header">
-    <h1 id="header_text">Catalog App</h1>
-    <button id="login_button">Login</button>
-</div>
-<div id="content">
-    <div id="details">
+{% extends "main.html" %}
+{% block content %}
+    <div class="inner_content">
         <h1>{{ bike_type_name }}</h1>
-        <p>{{ bike_part_description }}</p>
+        <p>{{ bike_part.description }}</p>
+        {% if 'username' in session and session['email'] == bike_part.user.email %}
+            <a href="{{ url_for('show_edit_bike_part', bike_part_name=bike_part.name, bike_part_id = bike_part.id) }}">Edit </a>
+            |
+            <a href="{{ url_for('delete_bike_part', bike_part_name=bike_part.name, bike_part_id = bike_part.id)}}">Delete </a>
+        {% endif %}
     </div>
-</div>
-</body>
 
-</html>
+{% endblock %}

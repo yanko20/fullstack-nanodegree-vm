@@ -1,21 +1,6 @@
-<html>
-
-<head>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-
-<body>
-
-<div id="header">
-    <h1 id="header_text">Catalog App</h1>
-    <button id="login_button">
-        <a href="{{ url_for('showLogin') }}">
-            Login
-        </a>
-    </button>
-</div>
-<div id="content">
-    <div id="categories">
+{% extends "main.html" %}
+{% block content %}
+    <div class="inner_content">
         <h1>Categories</h1>
         {% for bike_type in bike_types %}
             <p class="list">
@@ -23,19 +8,19 @@
             </p>
         {% endfor %}
     </div>
-    <div id="divider"></div>
-    <div id="details">
-        <h1>Latest Items</h1>
+    <div class="divider"></div>
+    <div class="inner_content">
+        {% if 'username' in session %}
+            <a href="{{ url_for('show_add_new_bike_part', bike_types=bike_types) }}">Add New Bike Part </a>
+        {% endif %}
+        <h1>Latest Bike Parts</h1>
         {% for bike_part in bike_parts %}
             <div>
                 <p class="list">
                     <a href="{{ url_for('show_bike_part_description', bike_type_name=bike_part.bike_type.name , bike_part_name=bike_part.name) }}">{{ bike_part.name }} </a>
-                    <span id="belongs_to">({{ bike_part.bike_type.name }})</span>
+                    <span class="belongs_to">({{ bike_part.bike_type.name }})</span>
                 </p>
             </div>
         {% endfor %}
     </div>
-</div>
-</body>
-
-</html>
+{% endblock %}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="header">
+    <h1 class="header_text">Catalog App</h1>
+    {% if 'username' not in session %}
+        <a class="button" href="{{ url_for('showLogin') }}">Login </a>
+    {% else %}
+        <a class="button" href="{{ url_for('fbdisconnect') }}">Logout</a>
+    {% endif %}
+</div>
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</div>
+</body>
+</html>

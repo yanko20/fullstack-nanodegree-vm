@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block content %}
+    <div class="inner_content">
+        <h1>Add New Bike Part</h1>
+        <form action="#" method="post">
+            <p>
+                <label for="name">Name</label>
+                <br>
+                <input type="text" name="name">
+            </p>
+            <p>
+                <label for="description">Description</label>
+                <br>
+                <textarea name="description" rows="4" cols="50"></textarea>
+            </p>
+            <p>
+                <label for="bike_type_id">Bike Type</label>
+                <br>
+                <select name="bike_type_id">
+                    {% for bike_type in bike_types %}
+                        <option value={{ bike_type.id }}>{{ bike_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                <button type="submit">Submit</button>
+            </p>
+
+        </form>
+    </div>
+{% endblock %}

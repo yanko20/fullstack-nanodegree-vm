@@ -1,17 +1,6 @@
-<html>
-
-<head>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-</head>
-
-<body>
-
-<div id="header">
-    <h1 id="header_text">Catalog App</h1>
-    <button id="login_button">Login</button>
-</div>
-<div id="content">
-    <div id="categories">
+{% extends "main.html" %}
+{% block content %}
+    <div class="inner_content">
         <h1>Categories</h1>
         {% for bike_type in bike_types %}
             <p class="list">
@@ -19,19 +8,16 @@
             </p>
         {% endfor %}
     </div>
-    <div id="divider"></div>
-    <div id="details">
+    <div class="divider"></div>
+    <div class="inner_content">
         <h1>{{ bike_type.name }} Items {{ bike_part_count }} (items)</h1>
         {% for bike_part in bike_parts %}
             <div>
                 <p class="list">
                     <a href="{{ url_for('show_bike_part_description', bike_type_name=bike_type.name , bike_part_name=bike_part.name) }}">{{ bike_part.name }} </a>
-                    <span id="belongs_to">({{ bike_part.bike_type.name }})</span>
+                    <span class="belongs_to">({{ bike_part.bike_type.name }})</span>
                 </p>
             </div>
         {% endfor %}
     </div>
-</div>
-</body>
-
-</html>
+{% endblock %}

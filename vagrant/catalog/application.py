@@ -107,7 +107,13 @@ def fbdisconnect():
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
-    return "you have been logged out"
+    del login_session['facebook_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    del login_session['user_id']
+    del login_session['provider']
+    return "You have successfully been logged out."
 
 
 @app.route('/')
@@ -136,11 +142,76 @@ def show_bike_parts(bike_type_name):
 @app.route('/catalog/<string:bike_type_name>/<string:bike_part_name>')
 def show_bike_part_description(bike_type_name, bike_part_name):
     bike_type_id = session.query(BikeType).filter_by(name=bike_type_name).one().id
-    bike_part_description = session.query(BikePart).filter_by(name=bike_part_name,
-                                                              bike_type_id=bike_type_id).one().description
+    bike_part = session.query(BikePart).filter_by(name=bike_part_name,
+                                                  bike_type_id=bike_type_id).one()
     return render_template('bike_part_description.html',
                            bike_type_name=bike_type_name,
-                           bike_part_description=bike_part_description)
+                           bike_part=bike_part)
+
+
+@app.route('/catalog/new', methods=['GET', 'POST'])
+def show_add_new_bike_part():
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        user = session.query(User).filter_by(email=login_session['email']).one()
+        new_bike_part = BikePart(
+            name=request.form['name'],
+            description=request.form['description'],
+            bike_type_id=request.form['bike_type_id'],
+            user_id=user.id)
+        session.add(new_bike_part)
+        session.commit()
+        return redirect(url_for('show_bikes'))
+    else:
+        bike_types = session.query(BikeType).all()
+        return render_template('add_new_bike_part.html', bike_types=bike_types)
+
+
+@app.route('/catalog/<string:bike_part_id>/<string:bike_part_name>/edit', methods=['GET', 'POST'])
+def show_edit_bike_part(bike_part_id, bike_part_name):
+    if 'username' not in login_session:
+        return redirect('/login')
+    bike_part = session.query(BikePart).filter_by(id=bike_part_id).one()
+    if bike_part.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this bike part. Please add your own bike part in order to edit.');}</script><body onload='myFunction()'>"
+    if request.method == 'POST':
+        bike_part.name = request.form['name']
+        bike_part.description = request.form['description']
+        bike_part.bike_type_id = request.form['bike_type_id']
+        session.add(bike_part)
+        session.commit()
+        return redirect(url_for('show_bikes'))
+    else:
+        bike_types = session.query(BikeType).all()
+        return render_template('edit_bike_part.html', bike_types=bike_types, bike_part=bike_part)
+
+
+@app.route('/catalog/<string:bike_part_id>/<string:bike_part_name>/delete', methods=['GET', 'POST'])
+def delete_bike_part(bike_part_id, bike_part_name):
+    if 'username' not in login_session:
+        return redirect('/login')
+    bike_part = session.query(BikePart).filter_by(id=bike_part_id).one()
+    if bike_part.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this bike part. Please add your own bike part in order to edit.');}</script><body onload='myFunction()'>"
+    if request.method == 'POST':
+        session.delete(bike_part)
+        session.commit()
+        return redirect(url_for('show_bikes'))
+    else:
+        return render_template('delete_bike_part.html')
+
+
+@app.route('/bike_types/json')
+def bike_types_json():
+    bike_types = session.query(BikeType).all()
+    return jsonify(bike_types=[bike_type.serialize for bike_type in bike_types])
+
+
+@app.route('/bike_parts/json')
+def bike_parts_json():
+    bike_parts = session.query(BikePart).all()
+    return jsonify(bike_parts=[bike_part.serialize for bike_part in bike_parts])
 
 
 def create_user(login_session):

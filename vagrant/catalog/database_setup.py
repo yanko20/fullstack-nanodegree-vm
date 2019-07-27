@@ -23,6 +23,14 @@ class BikeType(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+
 
 class BikePart(Base):
     __tablename__ = 'bike_part'
@@ -33,6 +41,17 @@ class BikePart(Base):
     bike_type = relationship(BikeType)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'bike_type_id': self.bike_type_id,
+            'bike_type_name': self.bike_type.name
+        }
 
 
 engine = create_engine('sqlite:///bikeparts.db')
